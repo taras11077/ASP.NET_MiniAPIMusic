@@ -1,0 +1,6 @@
+@MinAPIMusicProject_HostAddress = http://localhost:5226
+
+GET {{MinAPIMusicProject_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
