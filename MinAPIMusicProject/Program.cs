@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MinAPIMusicProject.Data;
@@ -65,10 +64,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.AddTrackEndpoints();
 app.AddArtistEndpoints();
 app.AddGenreEndpoints();
 app.AddPlaylistEndpoints();
 app.AddUserEndpoints();
+app.AddAuthEndpoints();
 
 app.Run();

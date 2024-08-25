@@ -1,53 +1,25 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinAPIMusicProject.DTOs;
 using MinAPIMusicProject.Interfaces;
 using MinAPIMusicProject.Models;
-using MinAPIMusicProject.Requests;
 
 namespace MinAPIMusicProject.Endpoints;
 
-//[Authorize]
 public static class UserEndpoints
 {
+    [Authorize]
     public static void AddUserEndpoints(this IEndpointRouteBuilder app)
     {
-        var configuration = app.ServiceProvider.GetRequiredService<IConfiguration>();
-        var endpoint = app.MapGroup("/api/users");
+       var endpoint = app.MapGroup("/api/users");
+       
+       // застосування авторизації до всієї групи ендпоінтів
+       endpoint.RequireAuthorization();
 
-        // create (register)
-        endpoint.MapPost("register", async (
-            IUserService service,
-            CreateUserRequest request,
-            HttpContext httpContext,
-            CancellationToken cancellationToken = default) =>
-        {
-            var userDb = await service.RegisterUser(request, cancellationToken);
-            var jwt = JwtGenerator.GenerateJwt(userDb, configuration.GetValue<string>("TokenKey")!,
-                DateTime.UtcNow.AddMinutes(5));
-
-            httpContext.Session.SetInt32("id", userDb.Id);
-
-            return Results.Created("token", jwt);
-        });
+        // create (register) - AuthEndpoits
         
-        // login
-        endpoint.MapPost("login", async (
-            IUserService service,
-            CreateUserRequest request,
-            CancellationToken cancellationToken = default) =>
-        {
-            var userDb = service.LoginUser(request, cancellationToken);
-            var jwt = JwtGenerator.GenerateJwt(userDb, configuration.GetValue<string>("TokenKey")!,
-                DateTime.UtcNow.AddMinutes(5));
-
-            return Results.Created("token", jwt);
-        });
-        
-
         // read
-        endpoint.MapGet("/", [Authorize] async (
+        endpoint.MapGet("/", async (
             IUserService service,
             [FromQuery] int page = 0,
             [FromQuery] int size = 10,
@@ -59,7 +31,7 @@ public static class UserEndpoints
         });
         
         // update
-        endpoint.MapPut("{id}", [Authorize] async (
+        endpoint.MapPut("{id}", async (
             IUserService service,
             [FromRoute] int id,
             [FromBody] UserDTO userDto,
@@ -72,7 +44,7 @@ public static class UserEndpoints
         });
 
         // delete
-        endpoint.MapDelete("{id}",[Authorize] async (
+        endpoint.MapDelete("{id}", async (
             IUserService service,
             [FromRoute] int id,
             CancellationToken cancellationToken = default) =>
@@ -157,7 +129,6 @@ public static class UserEndpoints
         
             return Results.Created("like", likeDto);
         });
-        
         
     }
 
