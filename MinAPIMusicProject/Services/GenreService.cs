@@ -19,7 +19,7 @@ public class GenreService : IGenreService
         _mapper = mapper;
     }
     
-    public async Task<GenreDTO> AddGenre(GenreDTO genreDto, CancellationToken cancellationToken = default)
+    public async Task<GenreDTO> AddGenre(AddGenreDTO genreDto, CancellationToken cancellationToken = default)
     {
         var genreFromDb = _context.Add(_mapper.Map<Genre>(genreDto));
         await _context.SaveChangesAsync(cancellationToken);
@@ -45,7 +45,7 @@ public class GenreService : IGenreService
     {
         return _context.Genres.Skip(page * size)
             .Take(size)
-            .Select(x => new GenreDTO() { Name = x.Name })
+            .Select(x => new GenreDTO() {Id = x.Id, Name = x.Name })
             .ToListAsync(cancellationToken);
     }
 

@@ -4,7 +4,7 @@ namespace MinAPIMusicProject.Interfaces;
 
 public interface IGenreService
 {
-    Task<GenreDTO> AddGenre(GenreDTO genreDto, CancellationToken cancellationToken = default);
+    Task<GenreDTO> AddGenre(AddGenreDTO genreDto, CancellationToken cancellationToken = default);
 
     Task DeleteGenre(int id, CancellationToken cancellationToken = default);
    

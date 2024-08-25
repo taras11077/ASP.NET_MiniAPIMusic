@@ -38,7 +38,7 @@ public static class GenreEndpoints
         // add
         endpoint.MapPost("/", async (
             IGenreService service,
-            GenreDTO genre,
+            AddGenreDTO genre,
             CancellationToken cancellationToken = default) =>
         {
             var genreFromDb = await service.AddGenre(genre, cancellationToken);
