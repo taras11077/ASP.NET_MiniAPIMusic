@@ -24,7 +24,7 @@ public class GenreService : IGenreService
         var genreFromDb = _context.Add(_mapper.Map<Genre>(genreDto));
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<GenreDTO>(genreFromDb); 
+        return _mapper.Map<GenreDTO>(genreFromDb.Entity); 
     }
     
 

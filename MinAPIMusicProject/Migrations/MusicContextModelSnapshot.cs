@@ -59,6 +59,32 @@ namespace MinAPIMusicProject.Migrations
                     b.ToTable("Genres");
                 });
 
+            modelBuilder.Entity("MinAPIMusicProject.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LikedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TrackId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrackId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("MinAPIMusicProject.Models.Playlist", b =>
                 {
                     b.Property<int>("Id")
@@ -92,10 +118,16 @@ namespace MinAPIMusicProject.Migrations
                     b.Property<int>("ArtistId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DurationInSeconds")
                         .HasColumnType("int");
 
                     b.Property<int>("GenreId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Listened")
                         .HasColumnType("int");
 
                     b.Property<int?>("PlaylistId")
@@ -128,10 +160,6 @@ namespace MinAPIMusicProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -139,6 +167,25 @@ namespace MinAPIMusicProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MinAPIMusicProject.Models.Like", b =>
+                {
+                    b.HasOne("MinAPIMusicProject.Models.Track", "Track")
+                        .WithMany("UserLikes")
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MinAPIMusicProject.Models.User", "User")
+                        .WithMany("LikedTracks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Track");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MinAPIMusicProject.Models.Playlist", b =>
@@ -185,8 +232,15 @@ namespace MinAPIMusicProject.Migrations
                     b.Navigation("Tracks");
                 });
 
+            modelBuilder.Entity("MinAPIMusicProject.Models.Track", b =>
+                {
+                    b.Navigation("UserLikes");
+                });
+
             modelBuilder.Entity("MinAPIMusicProject.Models.User", b =>
                 {
+                    b.Navigation("LikedTracks");
+
                     b.Navigation("Playlists");
                 });
 #pragma warning restore 612, 618

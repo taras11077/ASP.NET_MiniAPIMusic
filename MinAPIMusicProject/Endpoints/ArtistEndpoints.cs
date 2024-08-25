@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinAPIMusicProject.Data;
 using MinAPIMusicProject.DTOs;
@@ -34,10 +35,10 @@ public static class ArtistEndpoints
 
             return Results.Ok(result);
         });
-        
+
         endpoint.MapDelete("{id}", async (
-            IArtistService service, 
-            [FromRoute]int id,
+            IArtistService service,
+            [FromRoute] int id,
             CancellationToken cancellationToken = default) =>
         {
             try
@@ -50,7 +51,7 @@ public static class ArtistEndpoints
             {
                 return Results.NotFound();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return Results.BadRequest(ex.Message);
             }
@@ -67,23 +68,22 @@ public static class ArtistEndpoints
 
             return Results.Ok(artistFromDb);
         });
-        
+
         endpoint.MapPost("{artistId}/tracks", async (
             IArtistService service,
-            [FromRoute]int artistId,
-            [FromQuery]int genreId,
-            [FromBody]AddTrackDTO track,
+            [FromRoute] int artistId,
+            [FromBody] AddTrackDTO track,
             CancellationToken cancellationToken = default) =>
         {
-            var trackFromDb = await service.AddTrack(artistId, genreId, track, cancellationToken);
+            var trackFromDb = await service.AddTrack(artistId, track, cancellationToken);
 
             return Results.Created($"/api/tracks/{trackFromDb.Id}", trackFromDb.Id);
         });
-        
+
         endpoint.MapGet("{artistId}/tracks", async (
             MusicContext context,
             IMapper mapper,
-            [FromRoute]int artistId) =>
+            [FromRoute] int artistId) =>
         {
             var artist = await context.Artists.FindAsync(artistId);
 

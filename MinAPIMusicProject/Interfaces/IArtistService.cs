@@ -14,7 +14,7 @@ public interface IArtistService
     /// <exception cref="ArgumentNullException">throws when artist with id is not found</exception>
     Task DeleteArtist(int id, CancellationToken cancellationToken = default);
     Task<ArtistDTO> UpdateArtist(ArtistDTO artist, CancellationToken cancellationToken = default);
-    Task<TrackDTO> AddTrack(int artistId, int genreId, AddTrackDTO track, CancellationToken cancellationToken = default);
+    Task<TrackDTO> AddTrack(int artistId, AddTrackDTO track, CancellationToken cancellationToken = default);
     
     Task<List<ArtistDTO>> GetArtists(int page, int size, string? q, CancellationToken cancellationToken = default);
 }
